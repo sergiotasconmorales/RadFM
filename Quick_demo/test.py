@@ -113,7 +113,8 @@ def main():
     model.load_state_dict(ckpt)
     print("Finish loading model")
     
-    model = model.to('cuda')
+    #model = model.to('cuda')
+    """
     model.eval() 
     with torch.no_grad():
         lang_x = text_tokenizer(
@@ -126,7 +127,7 @@ def main():
         print('---------------------------------------------------')
         print('Input: ', question)
         print('Output: ', generated_texts[0])
-
+    """
     
 if __name__ == "__main__":
     main()
