@@ -77,7 +77,7 @@ def combine_and_preprocess(question,image_list,image_padding_tokens):
 def main():
     
     print("Setup tokenizer")
-    text_tokenizer,image_padding_tokens = get_tokenizer('./Language_files')
+    text_tokenizer,image_padding_tokens = get_tokenizer('./Quick_demo/Language_files')
     print("Finish loading tokenizer")
     
     ### Initialize a simple case for demo ###
@@ -85,7 +85,7 @@ def main():
     question = "Can you identify any visible signs of Cardiomegaly in the image?"
     image =[
             {
-                'img_path': './view1_frontal.jpg',
+                'img_path': './Quick_demo/view1_frontal.jpg',
                 'position': 0, #indicate where to put the images in the text string, range from [0,len(question)-1]
             }, # can add abitrary number of imgs
         ] 
@@ -96,9 +96,9 @@ def main():
     
     print("Setup Model")
     model = MultiLLaMAForCausalLM(
-        lang_model_path='./Language_files', ### Build up model based on LLaMa-13B config
+        lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
     )
-    ckpt = torch.load('./pytorch_model.bin',map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
+    ckpt = torch.load('.Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
     model.load_state_dict(ckpt)
     print("Finish loading model")
     

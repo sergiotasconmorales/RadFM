@@ -1,0 +1,6 @@
+torch
+torchvision
+einops
+einops_exts
+transformers
+sentencepiece
