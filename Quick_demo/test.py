@@ -109,12 +109,13 @@ def main():
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
     ).to(device_id)
     model = DDP(model, device_ids=[device_id])
+    """
     ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
     model.load_state_dict(ckpt)
     print("Finish loading model")
     
     #model = model.to('cuda')
-    """
+    
     model.eval() 
     with torch.no_grad():
         lang_x = text_tokenizer(
