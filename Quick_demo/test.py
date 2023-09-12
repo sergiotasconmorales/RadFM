@@ -11,13 +11,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer
 from torchvision import transforms
 from PIL import Image   
 from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.distributed.fsdp import (
-   FullyShardedDataParallel,
-   CPUOffload,
-)
-from torch.distributed.fsdp.wrap import (
-   default_auto_wrap_policy,
-)
 
 def get_tokenizer(tokenizer_path, max_img_size = 100, image_num = 32):
     '''
