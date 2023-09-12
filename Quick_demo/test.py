@@ -82,7 +82,7 @@ def main():
     n_gpus = torch.cuda.device_count()
     world_size = n_gpus
     rank = dist.get_rank()
-    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+    dist.init_process_group("nccl")
     print(f"Start running DDP on rank {rank}.")
     device_id = rank % world_size
 
