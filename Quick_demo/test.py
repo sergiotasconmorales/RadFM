@@ -81,8 +81,8 @@ def main():
     # set up parallel shit
     n_gpus = torch.cuda.device_count()
     world_size = n_gpus
-    dist.init_process_group("nccl")
     rank = dist.get_rank()
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
     print(f"Start running DDP on rank {rank}.")
     device_id = rank % world_size
 
@@ -108,7 +108,7 @@ def main():
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
     )
-    model = DDP(model, device_ids=[device_id])
+    model = DDP(model, device_ids=[rank])
     #fsdp_model = FullyShardedDataParallel(
     """
     ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
