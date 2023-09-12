@@ -27,8 +27,8 @@ class MyEmbedding(nn.Module):
         self.seg_channel = seg_channel
 
         ## The bert model is useless for generation. Load it just for keeping model the same with the pre-train checkpoint.
-        self.bert_tokenizer = AutoTokenizer.from_pretrained("./MedKEBERT")
-        self.bert_model = BertModel(AutoConfig.from_pretrained("./MedKEBERT/"))
+        self.bert_tokenizer = AutoTokenizer.from_pretrained("./Quick_demo/MedKEBERT")
+        self.bert_model = BertModel(AutoConfig.from_pretrained("./Quick_demo/MedKEBERT/"))
         self.bert_projection_fc = nn.Linear(768,vis_dim)
         
         ## the MedKEBERT can be downloaded from https://huggingface.co/xmcmic/Med-KEBERT/tree/main ##
