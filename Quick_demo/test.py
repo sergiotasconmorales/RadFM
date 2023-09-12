@@ -98,7 +98,7 @@ def main():
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
     )
-    ckpt = torch.load('.Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
+    ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
     model.load_state_dict(ckpt)
     print("Finish loading model")
     
