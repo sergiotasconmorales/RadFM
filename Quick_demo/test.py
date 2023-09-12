@@ -11,6 +11,13 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer
 from torchvision import transforms
 from PIL import Image   
 from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed.fsdp import (
+   FullyShardedDataParallel,
+   CPUOffload,
+)
+from torch.distributed.fsdp.wrap import (
+   default_auto_wrap_policy,
+)
 
 def get_tokenizer(tokenizer_path, max_img_size = 100, image_num = 32):
     '''
@@ -107,8 +114,9 @@ def main():
     print("Setup Model")
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
-    ).to(device_id)
-    model = DDP(model, device_ids=[device_id])
+    )
+    model = DDP(model)
+    #fsdp_model = FullyShardedDataParallel(
     """
     ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
     model.load_state_dict(ckpt)
