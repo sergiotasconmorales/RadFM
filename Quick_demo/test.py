@@ -115,7 +115,7 @@ def main():
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
     )
-    model = DDP(model)
+    model = DDP(model, device_ids=[device_id])
     #fsdp_model = FullyShardedDataParallel(
     """
     ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
