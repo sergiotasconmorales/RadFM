@@ -3,12 +3,14 @@ import torch.nn.functional as F
 from typing import Optional, Dict, Sequence
 from typing import List, Optional, Tuple, Union
 import transformers
+import torch.distributed as dist
 from dataclasses import dataclass, field
 from Model.RadFM.multimodality_model import MultiLLaMAForCausalLM
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer
 from torchvision import transforms
 from PIL import Image   
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 def get_tokenizer(tokenizer_path, max_img_size = 100, image_num = 32):
     '''
@@ -76,6 +78,14 @@ def combine_and_preprocess(question,image_list,image_padding_tokens):
     
 def main():
     
+    # set up parallel shit
+    n_gpus = torch.cuda.device_count()
+    world_size = n_gpus
+    dist.init_process_group("nccl")
+    rank = dist.get_rank()
+    print(f"Start running DDP on rank {rank}.")
+    device_id = rank % world_size
+
     print("Setup tokenizer")
     text_tokenizer,image_padding_tokens = get_tokenizer('./Quick_demo/Language_files')
     print("Finish loading tokenizer")
@@ -97,7 +107,8 @@ def main():
     print("Setup Model")
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
-    )
+    ).to(device_id)
+    model = DDP(model, device_ids=[device_id])
     ckpt = torch.load('./Quick_demo/pytorch_model.bin', map_location ='cpu') # Please dowloud our checkpoint from huggingface and Decompress the original zip file first
     model.load_state_dict(ckpt)
     print("Finish loading model")
@@ -106,7 +117,7 @@ def main():
     model.eval() 
     with torch.no_grad():
         lang_x = text_tokenizer(
-                text, max_length=2048, truncation=True, return_tensors="pt"
+                text, max_length=2048, truncation=True, return_tensors="pt", legacy=False
         )['input_ids'].to('cuda')
         
         vision_x = vision_x.to('cuda')
