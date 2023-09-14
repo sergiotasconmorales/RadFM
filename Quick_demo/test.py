@@ -191,7 +191,7 @@ def main(args):
     print("Setup Model")
     model = MultiLLaMAForCausalLM(
         lang_model_path='./Quick_demo/Language_files', ### Build up model based on LLaMa-13B config
-    ).to(device)
+    )
     model = DDP(model, device_ids=[args.gpu], find_unused_parameters=True)
     #fsdp_model = FullyShardedDataParallel(
     """
